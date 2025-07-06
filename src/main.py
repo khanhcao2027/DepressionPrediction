@@ -46,7 +46,7 @@ print(data.isnull().sum())
 # Drop incomplete/uninformative columns
 data.drop(columns=['Job Satisfaction', 'Work Pressure', 'id', 'Profession'], inplace=True, errors='ignore')
 
-# Handle missing values (e.g., drop rows with missing target or fill missing features)
+# Handle missing values
 data.replace('?', np.nan, inplace=True)  # Replace '?' with NaN
 data.dropna(subset=['Depression'], inplace=True)  # Drop rows where the target is missing
 data.fillna(data.median(numeric_only=True), inplace=True)  # Fill missing numerical values with median
@@ -110,10 +110,10 @@ y_dev = y_dev.to(device)
 
 # Step 6: Define Loss and Optimizer
 alpha = 0.001
-
-# Compute class weights
-class_weights = compute_class_weight('balanced', classes=np.unique(y_train.cpu()), y=y_train.cpu().numpy())
-class_weights = pt.tensor(class_weights, dtype=pt.float32).to(device)
+ 
+# # Compute class weights
+# class_weights = compute_class_weight('balanced', classes=np.unique(y_train.cpu()), y=y_train.cpu().numpy())
+# class_weights = pt.tensor(class_weights, dtype=pt.float32).to(device)
 
 cost_function = nn.CrossEntropyLoss()
 optimizer = pt.optim.Adam(model.parameters(), lr=alpha)  # Adjust weight_decay as needed
