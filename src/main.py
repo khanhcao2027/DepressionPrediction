@@ -131,9 +131,7 @@ num_epochs = 100
 cost = []
 model.train()
 for epoch in range(num_epochs):
-    for i, (features, labels) in enumerate(dataloader):
-        X_batch = features.to(device)
-        y_batch = labels.to(device)
+    for i, (X_batch, y_batch) in enumerate(dataloader):
         optimizer.zero_grad()
         with autocast('cuda' if pt.cuda.is_available() else 'cpu'):
             output = model(X_batch)

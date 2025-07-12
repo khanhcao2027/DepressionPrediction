@@ -19,10 +19,10 @@ class DesspressionModel(nn.Module):
 
     def forward(self, x):
         return self.net(x)
-def train_model(model, train_loader, criterion, optimizer, num_epochs=10):
+def train_model(model, data_loader, criterion, optimizer, num_epochs=10):
     cost = []
     for epoch in range(num_epochs):
-        for X, y in train_loader:
+        for X, y in data_loader:
             optimizer.zero_grad()
             outputs = model(X)
             loss = criterion(outputs, y)
@@ -30,3 +30,4 @@ def train_model(model, train_loader, criterion, optimizer, num_epochs=10):
             optimizer.step()
 
         print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+
