@@ -21,6 +21,7 @@ class DesspressionModel(nn.Module):
         return self.net(x)
 def train_model(model, data_loader, criterion, optimizer, num_epochs=10):
     cost = []
+    model.train()
     for epoch in range(num_epochs):
         for X, y in data_loader:
             optimizer.zero_grad()

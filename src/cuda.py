@@ -7,3 +7,4 @@ def current_device():
 
 def to_device(tensor, device):
     return tuple(t.to(device) for t in tensor)
+
