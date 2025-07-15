@@ -1,4 +1,6 @@
+import torch as pt
 import torch.nn as nn
+from sklearn.metrics import accuracy_score
 
 class DesspressionModel(nn.Module):
     def __init__(self, input_size, hidden_sizes, output_size, dropout_rate=0.5):
@@ -19,7 +21,17 @@ class DesspressionModel(nn.Module):
 
     def forward(self, x):
         return self.net(x)
-def train_model(model, data_loader, criterion, optimizer, num_epochs=10):
+    
+def evaluate_model(model, X, y):
+    model.eval()
+    with pt.no_grad():
+        outputs = model(X)
+        _, preds = pt.max(outputs, 1)
+        acc = accuracy_score(y.cpu(), preds.cpu())
+    return acc
+
+def train_model(model, data_loader, criterion, optimizer, num_epochs=10, Xy_tuple=None):
+    X_train, y_train, X_test, y_test, X_dev, y_dev = Xy_tuple
     cost = []
     model.train()
     for epoch in range(num_epochs):
@@ -29,6 +41,11 @@ def train_model(model, data_loader, criterion, optimizer, num_epochs=10):
             loss = criterion(outputs, y)
             loss.backward()
             optimizer.step()
-
-        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+        
+        cost.append(loss.item())
+        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {cost[-1]:.4f}')
+        # Calculate training accuracy
+        train_acc = evaluate_model(model, X_train, y_train)
+        dev_acc = evaluate_model(model, X_dev, y_dev)
+        print(f"Train Accuracy: {train_acc:.4f} | Dev Accuracy: {dev_acc:.4f}")
 
